@@ -11,42 +11,41 @@
 
 	<picture {% if pictureClass is defined and pictureClass is not empty %}class="{{ pictureClass }}"{% endif %}>
 		
+        {# WebP #}
         {% if craft.app.images.supportsWebP and image.extension != "svg" %}
 			
-            {% if mobileTransform and image.extension != "svg" %}
-				
-                <source type="image/webp" media="(max-width: 599px)" srcset="{{ image.getUrl({
-					transform: mobileTransform,
-					format: 'webp',
-				}) }}">
-
-            {% elseif transform and image.extension != "svg" %}
-
-                <source type="image/webp" media="(max-width: 599px)" srcset="{{ image.getUrl({
-					transform: transform,
-					format: 'webp',
-				}) }}">
-
+            {# Mobile #}
+            {% if mobileTransform %}	
+                {{ macros.src( image, mobileTransform, "sm", "webp", "image/webp" ) }}
+            {% elseif transform %}
+                {{ macros.src( image, transform, "sm", "webp", "image/webp" ) }}
 			{% endif %}
 
+            {# Desktop #}
+			{% if transform %}
+                {{ macros.src( image, transform, "lg", "webp", "image/webp" ) }}
+			{% endif %}
+
+		{% endif %}
+
+        {# JPEG #}
+        {% if image.extension != "svg" %}
         
-			{% if transform and image.extension != "svg" %}
-				<source type="image/webp" media="(min-width: 600px)" srcset="{{ image.getUrl({
-					transform: transform,
-					format: 'webp',
-				}) }}">
-			{% endif %}
+            {# Mobile #}
+            {% if mobileTransform %}
+                {{ macros.src( image, mobileTransform, "sm", "jpg", "image/jpeg" ) }}
+            {% elseif transform %}
+                {{ macros.src( image, transform, "sm", "jpg", "image/jpeg" ) }}
+            {% endif %}
 
-		{% endif %}
+            {# Desktop #}
+            {% if transform %}
+                {{ macros.src( image, transform, "lg", "jpg", "image/jpeg" ) }}
+            {% endif %}
 
-		{% if mobileTransform and image.extension != "svg" %}
-			<source media="(max-width: 599px)" srcset="{{ image.url(mobileTransform) }}">
-		{% endif %}
-
-		{% if transform and image.extension != "svg" %}
-			<source media="(min-width: 600px)" srcset="{{ image.url(transform) }}">
-		{% endif %}
-
+        {% endif %}
+        
+        {# Image Tag #}
 		{{ macros.tag(
 			(transform and image.extension != "svg") ? image.url(transform) : image.url,
 			alt ?? image.title,
@@ -62,8 +61,9 @@
 {% elseif field is defined and field is not empty %}
 
 	{% set image = (field is instance of('craft\\elements\\Asset'))
-					? craft.assets.id(field.id).one()
-					: field.one() %}
+        ? craft.assets.id(field.id).one()
+        : field.one() 
+    %}
 
 	{{ macros.tag(
 		image.url,

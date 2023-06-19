@@ -15,3 +15,24 @@
 		<script>console.log('[images/img]:: {{ text }}')</script>
 	{% endmacro %}
 {# End Error Reporting Macro #}
+
+{# Source Tag Macro #}
+    {% macro src( image, transform, size, format = null, type = null ) %}
+        
+        {% set media = size == "sm" 
+            ? "(max-width: 599px)"
+            : "(min-width: 600px)" 
+        %}
+
+        {% set url = format is null 
+            ? image.url( transform )
+            : image.getUrl({
+                transform : transform, 
+                format    : format
+            })
+        %}
+        
+        <source media="{{ media }}" srcset="{{ url }}" {% if type is not null %}type="{{ type }}"{% endif %}>
+
+    {% endmacro %}
+{# End Source Tag Macro #}
