@@ -44,6 +44,20 @@
             {% endif %}
 
         {% endif %}
+
+        {# Dimensions #}
+        {% set width, height = null, null %}
+        {% if dimensions ?? false %}
+            {% if transform %}
+                {% set width  = transform.width  %}
+                {% set height = transform.height %}
+            {% endif %}
+            {% if attributes is defined and attributes is not empty %}
+                {% set width  = attributes['width']  ?? width  %}
+                {% set height = attributes['height'] ?? height %}
+            {% endif %}
+        {% endif %}
+        
         
         {# Image Tag #}
 		{{ macros.tag(
@@ -52,7 +66,9 @@
 			class ?? null,
 			style ?? null,
 			attributes ?? null, 
-			lazyLoading ?? true
+			lazyLoading ?? true,
+            width ?? null,
+            height ?? null
 		) }}
 
 	</picture>
@@ -71,7 +87,9 @@
 		class ?? null,
 		style ?? null,
 		attributes ?? null,
-		lazyLoading ?? true
+		lazyLoading ?? true,
+        width ?? null, 
+        height ?? null
 	) }}
 
 {# Output image tag with passed in image url #}
@@ -83,7 +101,9 @@
 		class ?? null,
 		style ?? null,
 		attributes ?? null,
-		lazyLoading ?? true
+		lazyLoading ?? true,
+        width ?? null, 
+        height ?? null
 	) }}
 
 {# Report Error #}
