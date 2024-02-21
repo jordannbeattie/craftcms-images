@@ -28,19 +28,19 @@
 
 		{% endif %}
 
-        {# JPEG #}
+        {# PNG #}
         {% if image.extension != "svg" %}
         
             {# Mobile #}
             {% if mobileTransform %}
-                {{ macros.src( image, mobileTransform, "sm", "jpg", "image/jpeg" ) }}
+                {{ macros.src( image, mobileTransform, "sm", "png", "image/png" ) }}
             {% elseif transform %}
-                {{ macros.src( image, transform, "sm", "jpg", "image/jpeg" ) }}
+                {{ macros.src( image, transform, "sm", "png", "image/png" ) }}
             {% endif %}
 
             {# Desktop #}
             {% if transform %}
-                {{ macros.src( image, transform, "lg", "jpg", "image/jpeg" ) }}
+                {{ macros.src( image, transform, "lg", "png", "image/png" ) }}
             {% endif %}
 
         {% endif %}
